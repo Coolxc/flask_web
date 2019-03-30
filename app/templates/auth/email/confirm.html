@@ -1,0 +1,8 @@
+<p>Dear {{ user.username }},</p>
+<p>欢迎来到我的博客~</p>
+<p>请<a href="{{ url_for('auth.confirm',
+token=token,_external=True) }}">点这里</a>确认你的账号.</p>
+<p>或者复制这段链接到你的浏览器:</p>
+<p>{{ url_for('auth.confirm',token=token,_external=True) }}</p>
+<p>coolxc的博客</p>
+<p><small>这时一封安全的电子邮件</small></p>
