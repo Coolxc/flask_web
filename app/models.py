@@ -87,6 +87,14 @@ class User(UserMixin,db.Model):
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     @staticmethod
+    def add_self_follows():
+        for user in User.query.all():
+            if not user.is_following(user):
+                user.follow(user)
+                db.session.add(user)
+                db.session.commit()
+
+    @staticmethod
     def generate_fake(count=100):
         from sqlalchemy.exc import IntegrityError
         from random import seed

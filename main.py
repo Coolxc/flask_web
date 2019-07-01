@@ -17,9 +17,9 @@ def make_shell_context():
 
 COV = None
 if os.environ.get('FLASK_COVERAGE'):
-	import coverage
-	COV  = coverage.coverage(branch=True, include='app/*')
-	COV.start()
+    import coverage
+    COV  = coverage.coverage(branch=True, include='app/*')
+    COV.start()
 
 
 @app.cli.command()
@@ -55,16 +55,16 @@ def test(coverage, test_names):
 @click.option('--profile-dir', default=None,
 help='Directory where profiler data files are saved.')
 def profile(length=25, profile_dir=None):
-	from werkzeug.contrib.profiler import ProfilerMiddleware
-	app.wagi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[length], profile_dir=profile_dir)
-	app.run()
+    from werkzeug.contrib.profiler import ProfilerMiddleware
+    app.wagi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[length], profile_dir=profile_dir)
+    app.run()
 
 
 @app.cli.command()
 def deploy():
-	from flask_migrate import upgrade
-	from app.models import Role, User
-
-	upgrade()
-	Role.insert_roles()
-	User.add_self_follows()
+    from flask_migrate import upgrade
+    from app.models import Role, User
+    
+    db.create_all()
+    Role.insert_roles()
+    User.add_self_follows()
