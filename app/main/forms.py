@@ -1,16 +1,16 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField,SelectField, ValidationError
 from wtforms.validators import Required, Length, Email, Regexp
 from ..models import Role, User
 from flask_pagedown.fields import PageDownField
 
-class EditprofileForm(Form):
+class EditprofileForm(FlaskForm):
 	name = StringField('姓名', validators=[Length(0,64)])
 	location = StringField('家庭地址', validators=[Length(0,64)])
 	about_me = TextAreaField('关于我')
 	submit = SubmitField('提交')
 
-class EditprofileAdminForm(Form):
+class EditprofileAdminForm(FlaskForm):
 	email = StringField('电子邮件', validators=[Required(), Length(1,64),Email()])
 	username = StringField('用户名', validators=[Required(),Length(1,64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$',0,'Username must have only letters,''numbers,dots or underscored')])
 	confirmed = BooleanField('验证')
@@ -33,11 +33,12 @@ class EditprofileAdminForm(Form):
 		if field.data != self.user.username and User.query.filter_by(username=field.data).first():
 			raise ValidationError('用户名已被使用')
 
-class PostForm(Form):
-    body = PageDownField('记录一下今天的心情吧~',validators=[Required()])
-    submit = SubmitField('提交')
+class PostForm(FlaskForm):
+	title = PageDownField('标题')
+	body = PageDownField('记录一下今天的心情吧~',validators=[Required()])
+	submit = SubmitField('提交')
 
-class CommentForm(Form):
+class CommentForm(FlaskForm):
 	body = StringField('写点什么', validators=[Required()])
 	submit = SubmitField('提交')
 		

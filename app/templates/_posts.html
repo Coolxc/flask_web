@@ -1,6 +1,6 @@
 <ul class="posts">
     {% for post in posts %}
-    <li class="post" onclick="javascript:document.getElementById('1').click();">
+    <li class="post">
         <div class="post-thumbnail">
             <a href="{{ url_for('.user', username=post.author.username) }}">
                 <img class="img-rounded profile-thumbnail" src="{{ post.author.gravatar(size=40) }}">
@@ -10,10 +10,14 @@
             <div class="post-date">{{ moment(post.timestamp).format('YYYY年MM月DD日 HH:mm:ss') }}</div>
             <div class="post-author"><a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.username }}</a></div>
             <div class="post-body">
-            {% if post.body_html %}
-                {{ post.body_html | safe }}
+            {% if request.url == url_for('main.index', _external=True) or request.url == url_for('main.user', _external=True,username = post.author.username) %}
+                <a class='btn btn-outline-success btn-lg' style="color: black" href="{{ url_for('.post', id=post.id) }}">{{ post.title }}</a>
             {% else %}
+                {% if post.body_html %}
+                    {{ post.body_html | safe }}
+                {% else %}
                 {{ post.body }}
+                {% endif %}
             {% endif %}
             </div>
 	      <div class="post-footer">
@@ -26,9 +30,15 @@
                     <span class="label label-danger">编辑 [Admin]</span>
                 </a>
                 {% endif %}
-                <a id="1" href="{{ url_for('.post', id=post.id) }}">
-                    <span class="label label-default">查看</span>
+                {% if current_user == post.author %}
+                <a id="1" href="{{ url_for('.delete', id=post.id) }}">
+                    <span class="label label-default">删除</span>
                 </a>
+                {% elif current_user.is_administration() %}
+                <a id="1" href="{{ url_for('.delete', id=post.id) }}">
+                    <span class="label label-danger">删除</span>
+                </a>
+                {% endif %}
                 <a href="{{ url_for('.post',id=post.id) }}#comments">
                     <span class="label label-primary">{{ post.comments.count() }}条评论</span>
                 </a>

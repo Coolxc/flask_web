@@ -1,0 +1,2 @@
+-r common.txt
+pymysql==0.7.11

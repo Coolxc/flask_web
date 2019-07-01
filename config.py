@@ -15,14 +15,14 @@ class Config:
     MAIL_USE_SSL = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    SQLALCHEMY_TRACK_MODIFICATION = False
     @staticmethod
     def init_app(app):
         pass
 
-class DevelopmentConfig(Config):
-    DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-            'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+class ProductionConfig(Config):
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://yang:123456@localhost/Blog?charset=utf8'
     SESSION_PERMANENT = True
 
 class TestingConfig(Config):
@@ -31,7 +31,7 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
             'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
 
-class ProductionConfig(Config):
+class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
             'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 
@@ -53,7 +53,7 @@ class ProductionConfig(Config):
                 credentials=credentials,
                 secure=secure)
             mail_handler.setLevel(logging.ERROR)
-            app.logger.addHandler(,ail_handler)
+            app.logger.addHandler(ail_handler)
             
 
 config = {
